@@ -1,0 +1,13 @@
+google-generativeai
+llama-index
+openai
+cohere
+sentence_transformers
+pypdf
+transformers
+tree_sitter
+tree_sitter_languages
+chromadb
+qdrant-client
+pinecone-client
+streamlit
