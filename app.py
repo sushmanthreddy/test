@@ -1,6 +1,7 @@
 import os, tempfile, qdrant_client
 import streamlit as st
-from llama_index.llms import OpenAI, Gemini, Cohere
+from llama_index.llms.openai import OpenAI
+# from llama_index.llms import OpenAI, Gemini, Cohere
 from llama_index.embeddings import HuggingFaceEmbedding
 from llama_index import SimpleDirectoryReader, ServiceContext, VectorStoreIndex, StorageContext
 from llama_index.node_parser import SentenceSplitter, CodeSplitter, SemanticSplitterNodeParser, TokenTextSplitter
@@ -40,7 +41,7 @@ def save_uploaded_file(uploaded_file):
 
 def select_llm():
     st.header("Choose LLM")
-    llm_choice = st.selectbox("Select LLM", ["Gemini", "Cohere", "GPT-3.5", "GPT-4"], on_change=reset_pipeline_generated)
+    llm_choice = st.selectbox("Select LLM", [ "GPT-3.5", "GPT-4"], on_change=reset_pipeline_generated)
     
     if llm_choice == "GPT-3.5":
         llm = OpenAI(temperature=0.1, model="gpt-3.5-turbo-1106")
@@ -48,12 +49,12 @@ def select_llm():
     elif llm_choice == "GPT-4":
         llm = OpenAI(temperature=0.1, model="gpt-4-1106-preview")
         st.write(f"{llm_choice} selected")
-    elif llm_choice == "Gemini":
-        llm = Gemini(model="models/gemini-pro")
-        st.write(f"{llm_choice} selected")
-    elif llm_choice == "Cohere":
-        llm = Cohere(model="command", api_key=os.environ['COHERE_API_TOKEN'])
-        st.write(f"{llm_choice} selected")
+    # elif llm_choice == "Gemini":
+    #     llm = Gemini(model="models/gemini-pro")
+        # st.write(f"{llm_choice} selected")
+    # elif llm_choice == "Cohere":
+    #     llm = Cohere(model="command", api_key=os.environ['COHERE_API_TOKEN'])
+    #     st.write(f"{llm_choice} selected")
     return llm, llm_choice
 
 def select_embedding_model():
@@ -217,7 +218,7 @@ def send_query():
 def generate_code_snippet(llm_choice, embed_model_choice, node_parser_choice, response_mode, vector_store_choice):
     node_parser_params = st.session_state.get('node_parser_params', {})
     print(node_parser_params)
-    code_snippet = "from llama_index.llms import OpenAI, Gemini, Cohere\n"
+    code_snippet = "from llama_index.llms import OpenAI\n"
     code_snippet += "from llama_index.embeddings import HuggingFaceEmbedding\n"
     code_snippet += "from llama_index import ServiceContext, VectorStoreIndex, StorageContext\n"
     code_snippet += "from llama_index.node_parser import SentenceSplitter, CodeSplitter, SemanticSplitterNodeParser, TokenTextSplitter\n"
@@ -230,10 +231,10 @@ def generate_code_snippet(llm_choice, embed_model_choice, node_parser_choice, re
         code_snippet += "llm = OpenAI(temperature=0.1, model='gpt-3.5-turbo-1106')\n"
     elif llm_choice == "GPT-4":
         code_snippet += "llm = OpenAI(temperature=0.1, model='gpt-4-1106-preview')\n"
-    elif llm_choice == "Gemini":
-        code_snippet += "llm = Gemini(model='models/gemini-pro')\n"
-    elif llm_choice == "Cohere":
-        code_snippet += "llm = Cohere(model='command', api_key='<YOUR_API_KEY>')  # Replace <YOUR_API_KEY> with your actual API key\n"
+    # elif llm_choice == "Gemini":
+    #     code_snippet += "llm = Gemini(model='models/gemini-pro')\n"
+    # elif llm_choice == "Cohere":
+    #     code_snippet += "llm = Cohere(model='command', api_key='<YOUR_API_KEY>')  # Replace <YOUR_API_KEY> with your actual API key\n"
 
     # Embedding model initialization
     code_snippet += f"embed_model = HuggingFaceEmbedding(model_name='{embed_model_choice}')\n\n"
